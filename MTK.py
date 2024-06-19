@@ -148,3 +148,77 @@ class TugasGUI:
             self.kosongkan_entry()
         except ValueError as e:
             messagebox.showerror("Error", str(e))
+
+    def update_tugas(self):
+        id_tugas = self.ent_id_tugas.get()
+        id_tugas_baru = self.ent_id_tugas.get()
+        nama_tugas_baru = self.ent_nama_tugas.get()
+        mata_kuliah_baru = self.ent_mata_kuliah.get()
+
+        try:
+            if self.manajemen_tugas.update_tugas(id_tugas, id_tugas_baru, nama_tugas_baru, mata_kuliah_baru):
+                self.manajemen_tugas.simpan_tugas_ke_csv('tugas.csv')  # Menyimpan tugas ke dalam file CSV
+                messagebox.showinfo("Info", "Tugas berhasil diupdate!")
+            else:
+                messagebox.showerror("Error", "ID Tugas tidak ditemukan!")
+            self.kosongkan_entry()
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+
+    def hapus_tugas(self):
+        id_tugas = self.ent_id_tugas.get()
+        if self.manajemen_tugas.hapus_tugas(id_tugas):
+            self.manajemen_tugas.simpan_tugas_ke_csv('tugas.csv')  # Menyimpan tugas ke dalam file CSV
+            messagebox.showinfo("Info", "Tugas berhasil dihapus!")
+        else:
+            messagebox.showerror("Error", "ID Tugas tidak ditemukan!")
+        self.kosongkan_entry()
+
+    def cari_tugas(self):
+        kata_kunci = self.ent_kata_kunci.get()
+        berdasarkan = self.cmb_cari_berdasarkan.get()
+        hasil_pencarian = self.manajemen_tugas.cari_tugas(kata_kunci, berdasarkan)
+
+        view_window = tk.Toplevel(self.root)
+        view_window.title("Hasil Pencarian Tugas")
+
+        tree = ttk.Treeview(view_window, columns=("ID", "Nama Tugas", "Mata Kuliah"), show='headings')
+        tree.heading("ID", text="ID")
+        tree.heading("Nama Tugas", text="Nama Tugas")
+        tree.heading("Mata Kuliah", text="Mata Kuliah")
+        tree.pack(fill=tk.BOTH, expand=True)
+
+        for tugas in hasil_pencarian:
+            tree.insert("", tk.END, values=(tugas.id_tugas, tugas.nama_tugas, tugas.mata_kuliah))
+
+    def urutkan_tugas(self):
+        berdasarkan = self.cmb_urutkan_berdasarkan.get()
+        self.manajemen_tugas.urutkan_tugas(berdasarkan)
+        self.manajemen_tugas.simpan_tugas_ke_csv('tugas.csv')  # Menyimpan tugas ke dalam file CSV
+        messagebox.showinfo("Info", "Tugas berhasil diurutkan!")
+        self.lihat_tugas()
+
+    def lihat_tugas(self):
+        tugas = self.manajemen_tugas.tugas
+        view_window = tk.Toplevel(self.root)
+        view_window.title("Daftar Tugas")
+
+        tree = ttk.Treeview(view_window, columns=("ID", "Nama Tugas", "Mata Kuliah"), show='headings')
+        tree.heading("ID", text="ID")
+        tree.heading("Nama Tugas", text="Nama Tugas")
+        tree.heading("Mata Kuliah", text="Mata Kuliah")
+        tree.pack(fill=tk.BOTH, expand=True)
+
+        for tugas in tugas:
+            tree.insert("", tk.END, values=(tugas.id_tugas, tugas.nama_tugas, tugas.mata_kuliah))
+
+    def kosongkan_entry(self):
+        self.ent_id_tugas.delete(0, tk.END)
+        self.ent_nama_tugas.delete(0, tk.END)
+        self.ent_mata_kuliah.delete(0, tk.END)
+        self.ent_kata_kunci.delete(0, tk.END)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = TugasGUI(root)
+    root.mainloop()
