@@ -91,3 +91,60 @@ class TugasGUI:
         self.lbl_mata_kuliah.grid(row=2, column=0, padx=5, pady=5, sticky="w")
         self.ent_mata_kuliah = ttk.Entry(self.frame_tugas)
         self.ent_mata_kuliah.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
+        
+        # Button untuk tambah tugas
+        self.btn_tambah_tugas = ttk.Button(self.frame_tugas, text="Tambah Tugas", command=self.tambah_tugas)
+        self.btn_tambah_tugas.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+
+        # Button untuk update tugas
+        self.btn_update_tugas = ttk.Button(self.frame_tugas, text="Update Tugas", command=self.update_tugas)
+        self.btn_update_tugas.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+        # Button untuk hapus tugas
+        self.btn_hapus_tugas = ttk.Button(self.frame_tugas, text="Hapus Tugas", command=self.hapus_tugas)
+        self.btn_hapus_tugas.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+
+        # Frame untuk aksi tambahan
+        self.frame_aksi = ttk.LabelFrame(self.root, text="Menu")
+        self.frame_aksi.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.lbl_kata_kunci = ttk.Label(self.frame_aksi, text="Kata Kunci Pencarian:")
+        self.lbl_kata_kunci.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.ent_kata_kunci = ttk.Entry(self.frame_aksi)
+        self.ent_kata_kunci.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+        
+        self.lbl_cari_berdasarkan = ttk.Label(self.frame_aksi, text="Cari Berdasarkan:")
+        self.lbl_cari_berdasarkan.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.cmb_cari_berdasarkan = ttk.Combobox(self.frame_aksi, values=["Mata Kuliah", "Nama Tugas", "ID"])
+        self.cmb_cari_berdasarkan.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+        self.cmb_cari_berdasarkan.set("Mata Kuliah")
+
+        self.btn_cari_tugas = ttk.Button(self.frame_aksi, text="Cari Tugas", command=self.cari_tugas)
+        self.btn_cari_tugas.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
+
+        self.lbl_urutkan_berdasarkan = ttk.Label(self.frame_aksi, text="Urutkan Berdasarkan:")
+        self.lbl_urutkan_berdasarkan.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        self.cmb_urutkan_berdasarkan = ttk.Combobox(self.frame_aksi, values=["Mata Kuliah", "ID"])
+        self.cmb_urutkan_berdasarkan.grid(row=3, column=1, padx=5, pady=5, sticky="ew")
+
+        self.btn_urutkan_tugas = ttk.Button(self.frame_aksi, text="Urutkan Tugas", command=self.urutkan_tugas)
+        self.btn_urutkan_tugas.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+
+        # Button untuk menampilkan tugas
+        self.btn_lihat_tugas = ttk.Button(self.frame_aksi, text="Lihat Tugas", command=self.lihat_tugas)
+        self.btn_lihat_tugas.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+
+    def tambah_tugas(self):
+        id_tugas = self.ent_id_tugas.get()
+        nama_tugas = self.ent_nama_tugas.get()
+        mata_kuliah = self.ent_mata_kuliah.get()
+        
+        try:
+            tugas_baru = Tugas(id_tugas, nama_tugas, mata_kuliah)
+            self.manajemen_tugas.tambah_tugas(tugas_baru)
+            self.manajemen_tugas.simpan_tugas_ke_csv('tugas.csv')  # Menyimpan tugas ke dalam file CSV
+            messagebox.showinfo("Info", "Tugas berhasil ditambahkan!")
+            self.kosongkan_entry()
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
