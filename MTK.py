@@ -65,3 +65,29 @@ class ManajemenTugas:
             for row in reader:
                 tugas_baru = Tugas(row['ID'], row['Nama Tugas'], row['Mata Kuliah'])
                 self.tugas.append(tugas_baru)
+                
+class TugasGUI:
+    def __init__(self, root):
+        self.manajemen_tugas = ManajemenTugas()
+        self.manajemen_tugas.muat_tugas_dari_csv('tugas.csv')  # Memuat tugas dari file CSV saat aplikasi dimulai
+        self.root = root
+        self.root.title("Sistem Manajemen Tugas Kuliah")
+
+        # Frame Tugas
+        self.frame_tugas = ttk.LabelFrame(self.root, text="Tugas Kuliah")
+        self.frame_tugas.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        
+        self.lbl_id_tugas = ttk.Label(self.frame_tugas, text="ID Tugas:")
+        self.lbl_id_tugas.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.ent_id_tugas = ttk.Entry(self.frame_tugas)
+        self.ent_id_tugas.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+
+        self.lbl_nama_tugas = ttk.Label(self.frame_tugas, text="Nama Tugas:")
+        self.lbl_nama_tugas.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.ent_nama_tugas = ttk.Entry(self.frame_tugas)
+        self.ent_nama_tugas.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+        
+        self.lbl_mata_kuliah = ttk.Label(self.frame_tugas, text="Mata Kuliah:")
+        self.lbl_mata_kuliah.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.ent_mata_kuliah = ttk.Entry(self.frame_tugas)
+        self.ent_mata_kuliah.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
