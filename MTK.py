@@ -167,7 +167,7 @@ class TugasGUI:
 
     def hapus_tugas(self):
         id_tugas = self.ent_id_tugas.get()
-        if self.manajemen_tugas.hapus_tugas(id_tugas):
+        if self.manajemen_tugas.hapus_tugas(int(id_tugas)):
             self.manajemen_tugas.simpan_tugas_ke_csv('tugas.csv')  # Menyimpan tugas ke dalam file CSV
             messagebox.showinfo("Info", "Tugas berhasil dihapus!")
         else:
